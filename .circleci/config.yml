@@ -15,7 +15,7 @@ jobs:
           name: Start LocalStack
           command: |
             pip3 install localstack awscli-local[ver1]
-            docker pull localstack/localstack localstack/localstack-pro --all
+            docker pull localstack/localstack localstack/localstack-pro --all-tags
             localstack start -d
 
             echo "Waiting for LocalStack startup..."
