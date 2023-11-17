@@ -21,7 +21,7 @@ jobs:
             localstack start -d
 
             echo "Waiting for LocalStack startup..."
-            localstack wait -t 30
+            localstack wait -t 60
             echo "Startup complete"
 
       - run:
