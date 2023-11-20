@@ -1,0 +1,9 @@
+version = 0.1
+[default.deploy.parameters]
+stack_name = "devtestprodaws"
+s3_bucket = "devtestprodaws"
+s3_prefix = "cloudformation"
+region = "us-east-1"
+profile = "mine"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
