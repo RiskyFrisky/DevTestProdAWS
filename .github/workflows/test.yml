@@ -13,4 +13,6 @@ jobs:
             - run: bun i
             - name: Run tests
               working-directory: ./Lambda/__test__
+              env:
+                  ACCOUNT_ID: ${{ secrets.ACCOUNT_ID }}
               run: bun test

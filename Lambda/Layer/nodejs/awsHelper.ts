@@ -85,7 +85,9 @@ export const setItem = (
 
 export const sendMessage = async (queue: string, message: string) => {
 	const params = {
-		QueueUrl: `https://sqs.us-east-1.amazonaws.com/${await getAWSAccountId()}/${queue}`,
+		QueueUrl: `https://sqs.us-east-1.amazonaws.com/${
+			process.env.ACCOUNT_ID ?? (await getAWSAccountId())
+		}/${queue}`,
 		MessageBody: message
 	};
 	return new Promise((resolve, reject) => {
