@@ -35,7 +35,7 @@ jobs:
           samlocal deploy --config-file samconfig.toml --capabilities CAPABILITY_NAMED_IAM --no-confirm-changeset
       - name: Get function url
         run: |
-          echo $(awslocal lambda list-function-url-configs --function-name devtestprodaws-main | grep -o '"FunctionUrl": "[^"]*' | awk -F'"' '{print $4}') >> $FUNCTION_URL
+          echo FUNCTION_URL=$(awslocal lambda list-function-url-configs --function-name devtestprodaws-main | grep -o '"FunctionUrl": "[^"]*' | awk -F'"' '{print $4}') >> $GITHUB_ENV
       # Run integration tests
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
