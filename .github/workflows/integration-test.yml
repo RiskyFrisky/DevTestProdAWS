@@ -25,6 +25,9 @@ jobs:
           echo "Startup complete"
       - name: Create S3 Bucket
         run: awslocal s3 mb s3://devtestprodaws
+      # Get code
+      - uses: actions/checkout@v3
+      # Build and deploy SAM template
       - name: Deploy SAM Template
         working-directory: ./Cloudformation
         run: |
@@ -33,7 +36,7 @@ jobs:
       - name: Get function url
         run: |
           export FUNCTION_URL=$(awslocal lambda list-function-url-configs --function-name devtestprodaws-main | grep -o '"FunctionUrl": "[^"]*' | awk -F'"' '{print $4}')
-
+      # Run integration tests
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
