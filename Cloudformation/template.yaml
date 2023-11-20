@@ -1,168 +1,168 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: Lambda
 Parameters:
-    ApplicationTag:
-        Description: Application
-        Default: DevTestProdAWS
-        Type: String
-    EnvironmentTag:
-        Description: Environment
-        Default: dev
-        Type: String
+  ApplicationTag:
+    Description: Application
+    Default: DevTestProdAWS
+    Type: String
+  EnvironmentTag:
+    Description: Environment
+    Default: dev
+    Type: String
 Globals:
-    Function:
-        Tags:
-            Application: !Ref ApplicationTag
-            Environment: !Ref EnvironmentTag
-        Environment:
-            Variables:
-                NODE_OPTIONS: '--enable-source-maps'
+  Function:
+    Tags:
+      Application: !Ref ApplicationTag
+      Environment: !Ref EnvironmentTag
+    Environment:
+      Variables:
+        NODE_OPTIONS: "--enable-source-maps"
 Resources:
-    # IAM
-    ExecutionRole:
-        Type: AWS::IAM::Role
-        Properties:
-            Tags:
-                - Key: Application
-                  Value: !Ref ApplicationTag
-                - Key: Environment
-                  Value: !Ref EnvironmentTag
-            RoleName: !Sub ${AWS::StackName}-lambda-execution-role
-            AssumeRolePolicyDocument:
-                Version: '2012-10-17'
-                Statement:
-                    - Effect: Allow
-                      Principal:
-                          Service:
-                              - lambda.amazonaws.com
-                      Action:
-                          - sts:AssumeRole
-            ManagedPolicyArns:
-                - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-            Policies:
-                - PolicyName: Policy
-                  PolicyDocument:
-                      Version: '2012-10-17'
-                      Statement:
-                          - Effect: Allow
-                            Action: dynamodb:*
-                            Resource: '*'
-                          - Effect: Allow
-                            Action: sqs:*
-                            Resource: '*'
-    # Layer
-    Layer:
-        Type: AWS::Serverless::LayerVersion
-        Properties:
-            LayerName: !Sub ${AWS::StackName}-layer
-            Description: Shared resources
-            CompatibleArchitectures:
-                - arm64
-            CompatibleRuntimes:
-                - nodejs20.x
-            ContentUri: ../Lambda/Layer
-    # Functions
-    MainFunction:
-        Type: AWS::Serverless::Function
-        Properties:
-            Architectures:
-                - arm64
-            FunctionName: !Sub ${AWS::StackName}-main-function
-            Description: Main function
-            Handler: index.handler
-            Runtime: nodejs20.x
-            Role: !GetAtt ExecutionRole.Arn
-            MemorySize: 256
-            Timeout: 5
-            ReservedConcurrentExecutions: 1
-            CodeUri: ../Lambda/MainFunction
-            Layers:
-                - !Ref Layer
-            FunctionUrlConfig:
-                AuthType: NONE
-        Metadata: # Manage esbuild properties - https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-using-build-typescript.html#serverless-sam-cli-using-build-typescript-example
-            BuildMethod: esbuild
-            BuildProperties:
-                Format: esm
-                Minify: false
-                OutExtension:
-                    - .js=.mjs
-                Target: 'es2022'
-                Sourcemap: true
-                EntryPoints:
-                    - index.ts
-                External:
-                    - get-root-path
-    WorkerFunction:
-        Type: AWS::Serverless::Function
-        Properties:
-            Architectures:
-                - arm64
-            FunctionName: !Sub ${AWS::StackName}-worker-function
-            Description: Main function
-            Handler: index.handler
-            Runtime: nodejs20.x
-            Role: !GetAtt ExecutionRole.Arn
-            MemorySize: 256
-            Timeout: 5
-            ReservedConcurrentExecutions: 2
-            CodeUri: ../Lambda/WorkerFunction
-            Layers:
-                - !Ref Layer
-        Metadata:
-            BuildMethod: esbuild
-            BuildProperties:
-                Format: esm
-                Minify: false
-                OutExtension:
-                    - .js=.mjs
-                Target: 'es2022'
-                Sourcemap: true
-                EntryPoints:
-                    - index.ts
-                External:
-                    - get-root-path
-    # DynamoDB
-    Database:
-        Type: AWS::DynamoDB::Table
-        Properties:
-            TableName: !Sub ${AWS::StackName}-database
-            AttributeDefinitions:
-                - AttributeName: id
-                  AttributeType: S
-            KeySchema:
-                - AttributeName: id
-                  KeyType: HASH
-            Tags:
-                - Key: Application
-                  Value: !Ref ApplicationTag
-                - Key: Environment
-                  Value: !Ref EnvironmentTag
-            BillingMode: PAY_PER_REQUEST
-            TimeToLiveSpecification:
-                AttributeName: ttl
-                Enabled: true
-    # SQS
-    Queue:
-        Type: AWS::SQS::Queue
-        Properties:
-            QueueName: !Sub ${AWS::StackName}-queue
-            DelaySeconds: '0'
-            MessageRetentionPeriod: '60'
-            Tags:
-                - Key: Application
-                  Value: !Ref ApplicationTag
-                - Key: Environment
-                  Value: !Ref EnvironmentTag
-    QueueLambdaTrigger:
-        Type: AWS::Lambda::EventSourceMapping
-        Properties:
-            Enabled: true
-            EventSourceArn: !GetAtt Queue.Arn
-            FunctionName: !GetAtt WorkerFunction.Arn
-            BatchSize: '1'
+  # IAM
+  ExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Tags:
+        - Key: Application
+          Value: !Ref ApplicationTag
+        - Key: Environment
+          Value: !Ref EnvironmentTag
+      RoleName: !Sub ${AWS::StackName}-lambda-execution-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: Policy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: dynamodb:*
+                Resource: "*"
+              - Effect: Allow
+                Action: sqs:*
+                Resource: "*"
+  # Layer
+  Layer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: !Sub ${AWS::StackName}-layer
+      Description: Shared resources
+      CompatibleArchitectures:
+        - arm64
+      CompatibleRuntimes:
+        - nodejs18.x
+      ContentUri: ../Lambda/Layer
+  # Functions
+  MainFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Architectures:
+        - arm64
+      FunctionName: !Sub ${AWS::StackName}-main
+      Description: Main function
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt ExecutionRole.Arn
+      MemorySize: 256
+      Timeout: 5
+      ReservedConcurrentExecutions: 1
+      CodeUri: ../Lambda/MainFunction
+      Layers:
+        - !Ref Layer
+      FunctionUrlConfig:
+        AuthType: NONE
+    Metadata: # Manage esbuild properties - https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-using-build-typescript.html#serverless-sam-cli-using-build-typescript-example
+      BuildMethod: esbuild
+      BuildProperties:
+        Format: esm
+        Minify: false
+        OutExtension:
+          - .js=.mjs
+        Target: "es2022"
+        Sourcemap: true
+        EntryPoints:
+          - index.ts
+        External:
+          - get-root-path
+  WorkerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Architectures:
+        - arm64
+      FunctionName: !Sub ${AWS::StackName}-worker
+      Description: Main function
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt ExecutionRole.Arn
+      MemorySize: 256
+      Timeout: 5
+      ReservedConcurrentExecutions: 2
+      CodeUri: ../Lambda/WorkerFunction
+      Layers:
+        - !Ref Layer
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Format: esm
+        Minify: false
+        OutExtension:
+          - .js=.mjs
+        Target: "es2022"
+        Sourcemap: true
+        EntryPoints:
+          - index.ts
+        External:
+          - get-root-path
+  # DynamoDB
+  Database:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub ${AWS::StackName}-database
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      Tags:
+        - Key: Application
+          Value: !Ref ApplicationTag
+        - Key: Environment
+          Value: !Ref EnvironmentTag
+      BillingMode: PAY_PER_REQUEST
+      TimeToLiveSpecification:
+        AttributeName: ttl
+        Enabled: true
+  # SQS
+  Queue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub ${AWS::StackName}-queue
+      DelaySeconds: "0"
+      MessageRetentionPeriod: "60"
+      Tags:
+        - Key: Application
+          Value: !Ref ApplicationTag
+        - Key: Environment
+          Value: !Ref EnvironmentTag
+  QueueLambdaTrigger:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      Enabled: true
+      EventSourceArn: !GetAtt Queue.Arn
+      FunctionName: !GetAtt WorkerFunction.Arn
+      BatchSize: "1"
 Outputs:
-    MainFunctionUrl:
-        Description: MainFunction URL
-        Value: !GetAtt MainFunctionUrl.FunctionUrl
+  MainFunctionUrl:
+    Description: MainFunction URL
+    Value: !GetAtt MainFunctionUrl.FunctionUrl

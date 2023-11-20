@@ -1,0 +1,46 @@
+name: integration-test
+on:
+  push:
+    branches: ["main", "dev"]
+  pull_request:
+    branches: ["main", "dev"]
+jobs:
+  localstack:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Start LocalStack
+        env:
+          LOCALSTACK_API_KEY: ${{ secrets.LOCALSTACK_API_KEY }}
+          ACTIVATE_PRO: $ACTIVATE_PRO
+        run: |
+          pip install localstack awscli-local[ver1] aws-sam-cli-local   # install LocalStack cli, awslocal, and SAM cli
+          docker pull localstack/localstack-pro                         # Make sure to pull the latest version of the image
+          localstack start -d                                           # Start LocalStack in the background
+
+          echo "Waiting for LocalStack startup..."                      # Wait 30 seconds for the LocalStack container
+          localstack wait -t 30                                         # to become ready before timing out
+          echo "Startup complete"
+      - name: Create S3 Bucket
+        run: awslocal s3 mb s3://devtestprodaws
+      - name: Deploy SAM Template
+        working-directory: ./Cloudformation
+        run: |
+          samlocal build --template-file template.yaml
+          samlocal deploy --config-file samconfig.toml --capabilities CAPABILITY_NAMED_IAM --no-confirm-changeset
+      - name: Get function url
+        run: |
+          export FUNCTION_URL=$(awslocal lambda list-function-url-configs --function-name devtestprodaws-main | grep -o '"FunctionUrl": "[^"]*' | awk -F'"' '{print $4}')
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/GithubActionsRole
+          aws-region: us-east-1
+      - uses: oven-sh/setup-bun@v1
+      - run: bun i
+      - name: Run integration tests
+        working-directory: ./Lambda/__test__/integration
+        run: bun test
