@@ -3,6 +3,8 @@ import { describe, test, expect, beforeAll } from "bun:test";
 describe("Integration tests", () => {
     let color: string;
     beforeAll(() => {
+        console.log("url:", process.env.FUNCTION_URL);
+
         const colors = [
             "red",
             "green",
@@ -15,6 +17,8 @@ describe("Integration tests", () => {
         ];
         const randomIndex = Math.floor(Math.random() * colors.length);
         color = colors[randomIndex];
+
+        console.log("color:", color);
     });
 
     test("POST /color", async () => {

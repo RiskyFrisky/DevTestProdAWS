@@ -11,6 +11,17 @@ jobs:
       id-token: write
       contents: read
     steps:
+      # Get code
+      - uses: actions/checkout@v3
+      # Get AWS credentials
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/GithubActionsRole
+          aws-region: us-east-1
+      # Check into Bun environment
+      - uses: oven-sh/setup-bun@v1
+      # Start LocalStack
       - name: Start LocalStack
         env:
           LOCALSTACK_API_KEY: ${{ secrets.LOCALSTACK_API_KEY }}
@@ -25,8 +36,6 @@ jobs:
           echo "Startup complete"
       - name: Create S3 Bucket
         run: awslocal s3 mb s3://devtestprodaws
-      # Get code
-      - uses: actions/checkout@v3
       # Build and deploy SAM template
       - name: Deploy SAM Template
         working-directory: ./Cloudformation
@@ -37,12 +46,6 @@ jobs:
         run: |
           echo FUNCTION_URL=$(awslocal lambda list-function-url-configs --function-name devtestprodaws-main | grep -o '"FunctionUrl": "[^"]*' | awk -F'"' '{print $4}') >> $GITHUB_ENV
       # Run integration tests
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-to-assume: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/GithubActionsRole
-          aws-region: us-east-1
-      - uses: oven-sh/setup-bun@v1
       - run: bun i
       - name: Run integration tests
         working-directory: ./Lambda/__test__/integration
