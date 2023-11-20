@@ -11,22 +11,23 @@ jobs:
       id-token: write
       contents: read
     steps:
+      # Get code
+      - uses: actions/checkout@v3
+      # Start LocalStack
       - name: Start LocalStack
         env:
-          LOCALSTACK_API_KEY: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
-          ACTIVATE_PRO: $ACTIVATE_PRO
+          LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
+        working-directory: ./Lambda/__test__/integration/localstack
         run: |
           pip install localstack awscli-local[ver1] aws-sam-cli-local   # install LocalStack cli, awslocal, and SAM cli
           docker pull localstack/localstack-pro                         # Make sure to pull the latest version of the image
-          localstack start -d                                           # Start LocalStack in the background
+          docker compose up -d                                          # Start LocalStack in the background
 
           echo "Waiting for LocalStack startup..."                      # Wait 30 seconds for the LocalStack container
-          localstack wait -t 30                                         # to become ready before timing out
+          sleep 30                                                      # to become ready before timing out
           echo "Startup complete"
       - name: Create S3 Bucket
         run: awslocal s3 mb s3://devtestprodaws
-      # Get code
-      - uses: actions/checkout@v3
       # Build and deploy SAM template
       - name: Deploy SAM Template
         working-directory: ./Cloudformation
