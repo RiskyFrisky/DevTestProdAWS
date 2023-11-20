@@ -1,0 +1,14 @@
+{
+	"name": "layer",
+	"version": "1.0.0",
+	"description": "",
+	"scripts": {
+		"compile": "find . -type d -name 'node_modules' -prune -o -type f -name '*.ts' -print | xargs npx esbuild --bundle --format=esm --target=es2022 --outdir=dist --out-extension:.js=.mjs --sourcemap=external"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"get-root-path": "^2.0.2"
+	}
+}

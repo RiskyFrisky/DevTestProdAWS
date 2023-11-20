@@ -1,0 +1,11 @@
+{
+	"name": "function",
+	"version": "1.0.0",
+	"description": "",
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"esbuild": "^0.19.6"
+	}
+}
