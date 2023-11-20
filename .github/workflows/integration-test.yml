@@ -37,6 +37,14 @@ jobs:
       - name: Get function url
         run: |
           echo FUNCTION_URL=$(awslocal lambda list-function-url-configs --function-name devtestprodaws-main | grep -o '"FunctionUrl": "[^"]*' | awk -F'"' '{print $4}') >> $GITHUB_ENV
+
+          awslocal lambda invoke \
+              --function-name devtestprodaws-main \
+              --cli-binary-format raw-in-base64-out \
+              --payload '{"requestContext":{"http":{"path":"/color","method":"GET"}},"queryStringParameters":{"id":"myId"}}' \
+              out.txt
+
+          cat out.txt
       # Run integration tests
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
