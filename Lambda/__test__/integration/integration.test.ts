@@ -38,8 +38,8 @@ describe("Integration tests", () => {
     });
 
     test("GET /color", async () => {
-        // Delay the test execution for 1 second to give time for SQS to trigger Worker Lambda
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        // Delay the test execution for 2 seconds to give time for SQS to trigger Worker Lambda
+        await new Promise((resolve) => setTimeout(resolve, 2000));
 
         const res: Response = await fetch(
             `${process.env.FUNCTION_URL}color?id=myId`

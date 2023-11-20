@@ -45,7 +45,7 @@ Deploy on LocalStack (Requires PRO account for LambdaLayer use)
 
 ```bash
 cd $(git rev-parse --show-toplevel)/Lambda/__test__/integration/localstack
-docker compose --env-file ../../../.env up
+docker compose --env-file $(git rev-parse --show-toplevel)/.env up
 
 awslocal s3 mb s3://devtestprodaws
 
