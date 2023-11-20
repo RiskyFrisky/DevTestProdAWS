@@ -19,7 +19,7 @@ jobs:
           LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
           ACTIVATE_PRO: 1
         run: |
-          pip install localstack awscli-local[ver1] aws-sam-cli-local   # install LocalStack cli, awslocal, and SAM cli
+          pip install localstack awscli-local aws-sam-cli-local         # install LocalStack cli, awslocal, and SAM cli
           docker pull localstack/localstack-pro                         # Make sure to pull the latest version of the image
           localstack start -d                                           # Start LocalStack in the background
 
