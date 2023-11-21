@@ -70,3 +70,13 @@ Deploy on AWS
 cd $(git rev-parse --show-toplevel)/Cloudformation
 sam deploy --config-file samconfig.toml --capabilities CAPABILITY_NAMED_IAM --no-confirm-changeset
 ```
+
+# GitHub Action:
+
+Test action locally with `act`
+
+-   https://github.com/nektos/act
+
+```bash
+act --secret-file .env -v
+```
