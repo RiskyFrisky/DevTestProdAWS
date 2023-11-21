@@ -13,7 +13,7 @@ describe("Integration tests", () => {
             "yellow",
             "orange",
             "black",
-            "white",
+            "white"
         ];
         const randomIndex = Math.floor(Math.random() * colors.length);
         color = colors[randomIndex];
@@ -27,9 +27,9 @@ describe("Integration tests", () => {
             {
                 method: "POST",
                 headers: {
-                    "Content-type": "application/json",
+                    "Content-type": "application/json"
                 },
-                body: JSON.stringify({ color }),
+                body: JSON.stringify({ color })
             }
         );
 
@@ -42,7 +42,7 @@ describe("Integration tests", () => {
 
         // expect(ok).toEqual(true);
         // expect(body).toHaveProperty("message");
-    });
+    }, 10000);
 
     test("GET /color", async () => {
         // Delay the test execution for 2 seconds to give time for SQS to trigger Worker Lambda
@@ -61,5 +61,5 @@ describe("Integration tests", () => {
         // expect(statusCode).toEqual(200);
         // expect(body).toHaveProperty("color");
         // expect(body.color).toEqual(color);
-    });
+    }, 10000);
 });

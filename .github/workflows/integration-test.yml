@@ -46,14 +46,6 @@ jobs:
       - name: Get function url
         run: |
           echo FUNCTION_URL=$(awslocal lambda list-function-url-configs --function-name devtestprodaws-main | grep -o '"FunctionUrl": "[^"]*' | awk -F'"' '{print $4}') >> $GITHUB_ENV
-
-          awslocal lambda invoke \
-              --function-name devtestprodaws-main \
-              --payload '{"requestContext":{"http":{"path":"/color","method":"GET"}},"queryStringParameters":{"id":"myId"}}' \
-              out.txt
-
-          cat out.txt
-          echo OUTPUT=$(cat out.txt) >> $GITHUB_ENV
       # Run integration tests
       - name: Run integration tests
         working-directory: ./Lambda/__test__/integration
