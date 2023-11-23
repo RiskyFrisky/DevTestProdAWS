@@ -10,8 +10,8 @@ jobs:
     permissions:
       id-token: write
       contents: read
-    # env:
-    #   LOCALSTACK_HOSTNAME: localhost.localstack.cloud
+    env:
+      LOCALSTACK_HOSTNAME: localhost
     steps:
       # Get code
       - uses: actions/checkout@v3
@@ -31,7 +31,7 @@ jobs:
 
           echo "Waiting for LocalStack startup..."                      # Wait 30 seconds for the LocalStack container
           localstack wait -t 30                                         # to become ready before timing out
-          echo $LOCALSTACK_HOSTNAME
+          echo $LOCALSTACK_HOST
           echo "Startup complete"
       - name: Create S3 Bucket
         run: awslocal s3 mb s3://devtestprodaws
