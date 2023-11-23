@@ -11,7 +11,7 @@ jobs:
       id-token: write
       contents: read
     env:
-      LOCALSTACK_HOSTNAME: localhost
+      LOCALSTACK_HOST: "127.0.0.1"
     steps:
       # Get code
       - uses: actions/checkout@v3

@@ -21,9 +21,9 @@ if (process.env.NODE_ENV !== "test") {
         sessionToken: process.env.AWS_SESSION_TOKEN
     };
 }
-if (process.env.LOCALSTACK_HOSTNAME) {
+if (process.env.LOCALSTACK_HOST) {
     const endpoint: EndpointV2 = {
-        url: new URL(`http://${process.env.LOCALSTACK_HOSTNAME}:4566`)
+        url: new URL(`http://${process.env.LOCALSTACK_HOST}:4566`)
     };
     config.endpoint = endpoint;
 }

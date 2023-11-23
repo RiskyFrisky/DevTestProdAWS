@@ -2,10 +2,12 @@ import { describe, test, expect, beforeAll } from "bun:test";
 
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 
+const endpoint = process.env.LOCALSTACK_HOST
+    ? `http://${process.env.LOCALSTACK_HOST}:4566`
+    : "http://127.0.0.1:4566";
+
 const lambda = new LambdaClient({
-    endpoint: process.env.LOCALSTACK_HOSTNAME
-        ? `http://${process.env.LOCALSTACK_HOSTNAME}:4566`
-        : "http://localhost.localstack.cloud:4566",
+    endpoint,
     tls: false,
     region: "us-east-1",
     credentials: {
@@ -34,7 +36,7 @@ const invoke = async (funcName: string, payload: any) => {
 describe("Lambda invoke integration tests", () => {
     let color: string;
     beforeAll(() => {
-        console.log("url:", `http://${process.env.LOCALSTACK_HOSTNAME}:4566`);
+        console.log("url:", endpoint);
 
         const colors = [
             "red",
@@ -76,8 +78,8 @@ describe("Lambda invoke integration tests", () => {
     }, 10000);
 
     test("GET /color", async () => {
-        // Delay the test execution for 2 seconds to give time for SQS to trigger Worker Lambda
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        // Delay the test execution for 5 seconds to give time for SQS to trigger Worker Lambda
+        await new Promise((resolve) => setTimeout(resolve, 5000));
 
         const event = {
             requestContext: {
@@ -99,5 +101,5 @@ describe("Lambda invoke integration tests", () => {
         expect(statusCode).toEqual(200);
         expect(body).toHaveProperty("color");
         expect(body.color).toEqual(color);
-    }, 10000);
+    }, 15000);
 });
