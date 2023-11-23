@@ -24,6 +24,7 @@ jobs:
           LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
           ACTIVATE_PRO: 1
           DEBUG: 1
+          GATEWAY_LISTEN: "127.0.0.1:4566"
         run: |
           pip install localstack awscli-local[ver1] aws-sam-cli-local   # install LocalStack cli, awslocal, and SAM cli
           docker pull localstack/localstack-pro                         # Make sure to pull the latest version of the image
@@ -32,6 +33,7 @@ jobs:
           echo "Waiting for LocalStack startup..."                      # Wait 30 seconds for the LocalStack container
           localstack wait -t 30                                         # to become ready before timing out
           echo $LOCALSTACK_HOST
+          echo $GATEWAY_LISTEN
           echo "Startup complete"
       - name: Create S3 Bucket
         run: awslocal s3 mb s3://devtestprodaws
