@@ -34,7 +34,7 @@ const invoke = async (funcName: string, payload: any) => {
 describe("Lambda invoke integration tests", () => {
     let color: string;
     beforeAll(() => {
-        console.log("url:", process.env.FUNCTION_URL);
+        console.log("url:", `http://${process.env.LOCALSTACK_HOSTNAME}:4566`);
 
         const colors = [
             "red",
