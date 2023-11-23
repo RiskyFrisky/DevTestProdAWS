@@ -3,10 +3,11 @@ import { Handler } from "aws-lambda";
 import { rootPath } from "get-root-path";
 const layerPath = "/opt/nodejs/dist";
 
-const awsHelper =
+const awsHelper = await import(
     process.env.NODE_ENV === "test"
-        ? await import(`${rootPath}/Lambda/Layer/nodejs/awsHelper.ts`)
-        : await import(`${layerPath}/awsHelper.mjs`);
+        ? `${rootPath}/Lambda/Layer/nodejs/awsHelper.ts`
+        : `${layerPath}/awsHelper.mjs`
+);
 
 export const handler: Handler = async (event) => {
     console.log(JSON.stringify(event, null, 2));
