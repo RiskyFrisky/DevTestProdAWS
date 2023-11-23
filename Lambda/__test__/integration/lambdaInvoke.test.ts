@@ -9,11 +9,11 @@ const endpoint = process.env.LOCALSTACK_HOST
 const lambda = new LambdaClient({
     endpoint,
     tls: false,
-    region: "us-east-1"
-    // credentials: {
-    //     accessKeyId: "any",
-    //     secretAccessKey: "any"
-    // }
+    region: "us-east-1",
+    credentials: {
+        accessKeyId: "any",
+        secretAccessKey: "any"
+    }
 });
 const invoke = async (funcName: string, payload: any) => {
     const command = new InvokeCommand({
