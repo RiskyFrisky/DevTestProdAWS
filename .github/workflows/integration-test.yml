@@ -10,11 +10,14 @@ jobs:
     permissions:
       id-token: write
       contents: read
-    env:
-      LOCALSTACK_HOSTNAME: localhost.localstack.cloud
+    # env:
+    #   LOCALSTACK_HOSTNAME: localhost.localstack.cloud
     steps:
       # Get code
       - uses: actions/checkout@v3
+      # Setup Bun
+      - uses: oven-sh/setup-bun@v1
+      - run: bun i
       # Start LocalStack
       - name: Start LocalStack
         env:
@@ -28,12 +31,10 @@ jobs:
 
           echo "Waiting for LocalStack startup..."                      # Wait 30 seconds for the LocalStack container
           localstack wait -t 30                                         # to become ready before timing out
+          echo $LOCALSTACK_HOSTNAME
           echo "Startup complete"
       - name: Create S3 Bucket
         run: awslocal s3 mb s3://devtestprodaws
-      # Setup Bun
-      - uses: oven-sh/setup-bun@v1
-      - run: bun i
       # Build Lambda Layer
       - name: Build Lambda Layer
         working-directory: ./Lambda/Layer/nodejs
