@@ -17,7 +17,7 @@ jobs:
           - 4566:4566
           - 4510-4559:4510-4559
         volumes:
-          - volume:/var/lib/localstack
+          - ./volume:/var/lib/localstack
     env:
       LOCALSTACK_HOST: localhost.localstack.cloud
       LOCALSTACK_HOSTNAME: localhost.localstack.cloud
