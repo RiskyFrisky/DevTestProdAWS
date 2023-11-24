@@ -33,33 +33,33 @@ describe("Integration tests", () => {
             }
         );
 
-        console.log("res:", res);
-        console.log("body:", await res.text());
+        // console.log("res:", res);
+        // console.log("body:", await res.text());
 
-        // const ok = res.ok;
-        // const statusCode = res.status; // localstack returns 200 instead of 202
-        // const body = await res.json();
+        const ok = res.ok;
+        const statusCode = res.status; // localstack returns 200 instead of 202
+        const body = await res.json();
 
-        // expect(ok).toEqual(true);
-        // expect(body).toHaveProperty("message");
-    }, 10000);
+        expect(ok).toEqual(true);
+        expect(body).toHaveProperty("message");
+    }, 15000);
 
     test("GET /color", async () => {
-        // Delay the test execution for 2 seconds to give time for SQS to trigger Worker Lambda
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        // Delay the test execution for X seconds to give time for SQS to trigger Worker Lambda
+        await new Promise((resolve) => setTimeout(resolve, 12 * 1000));
 
         const res: Response = await fetch(
             `${process.env.FUNCTION_URL}color?id=myId`
         );
 
-        console.log("res:", res);
-        console.log("body:", await res.text());
+        // console.log("res:", res);
+        // console.log("body:", await res.text());
 
-        // const statusCode = res.status;
-        // const body = await res.json();
+        const statusCode = res.status;
+        const body = await res.json();
 
-        // expect(statusCode).toEqual(200);
-        // expect(body).toHaveProperty("color");
-        // expect(body.color).toEqual(color);
-    }, 10000);
+        expect(statusCode).toEqual(200);
+        expect(body).toHaveProperty("color");
+        expect(body.color).toEqual(color);
+    }, 25000);
 });
