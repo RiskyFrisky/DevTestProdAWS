@@ -5,7 +5,7 @@ on:
   pull_request:
     branches: ["main", "dev"]
 jobs:
-  localstack:
+  integration-test-job:
     runs-on: ubuntu-latest
     services:
       localstack:
@@ -14,14 +14,13 @@ jobs:
           LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
           ACTIVATE_PRO: 1
           DEBUG: 1
-          AWS_ACCESS_KEY_ID: test
-          AWS_SECRET_ACCESS_KEY: test
-          AWS_DEFAULT_REGION: us-east-1
         ports:
           - 4566:4566
           - 4510-4559:4510-4559
     env:
       LOCALSTACK_HOST: localhost.localstack.cloud
+      LOCALSTACK_HOSTNAME: localhost.localstack.cloud
+      SAM_CLI_TELEMETRY: 0
     steps:
       # Get code
       - uses: actions/checkout@v3

@@ -78,5 +78,6 @@ Test action locally with `act`
 -   https://github.com/nektos/act
 
 ```bash
-act --secret-file .env -v
+gh act --secret-file .env --job unit-test-job
+gh act --secret-file .env --job integration-test-job
 ```
