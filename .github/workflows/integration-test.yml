@@ -13,11 +13,13 @@ jobs:
         env:
           LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
           DEBUG: 1
+          # DOCKER_HOST: unix:///var/run/docker.sock
         ports:
           - 4566:4566
           - 4510-4559:4510-4559
-        volumes:
-          - ./volume:/var/lib/localstack
+        # volumes:
+        #   - "./volume:/var/lib/localstack"
+        #   - "/var/run/docker.sock:/var/run/docker.sock"
     env:
       LOCALSTACK_HOST: localhost.localstack.cloud
       LOCALSTACK_HOSTNAME: localhost.localstack.cloud
