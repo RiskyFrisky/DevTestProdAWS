@@ -25,7 +25,7 @@ jobs:
       # Start LocalStack
       - name: Start LocalStack
         run: |
-          pip install localstack awscli-local aws-sam-cli-local   # install LocalStack cli, awslocal, and SAM cli
+          pip install localstack awscli-local[ver1] aws-sam-cli-local   # install LocalStack cli, awslocal, and SAM cli
           echo "Startup complete"
       - name: Create S3 Bucket
         run: awslocal s3 mb s3://devtestprodaws
@@ -43,7 +43,7 @@ jobs:
         working-directory: ./Cloudformation
         run: |
           samlocal build --template-file template.yaml
-          samlocal deploy --config-file samconfig.toml --capabilities CAPABILITY_NAMED_IAM --no-confirm-changeset
+          samlocal deploy --config-file samconfig.toml --capabilities CAPABILITY_NAMED_IAM --no-confirm-changeset --debug
       - name: Get function url
         run: |
           echo FUNCTION_URL=$(awslocal lambda list-function-url-configs --function-name devtestprodaws-main | grep -o '"FunctionUrl": "[^"]*' | awk -F'"' '{print $4}') >> $GITHUB_ENV
