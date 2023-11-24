@@ -1,0 +1,25 @@
+stages:
+  - stage:
+      name: my_stage
+      type: CI
+      spec:
+        serviceDependencies:
+          - identifier: localstack
+            name: localstack
+            type: Service
+            spec:
+              connectorRef: my_connector
+              image: localstack/localstack-pro
+              envVariables:
+                LOCALSTACK_AUTH_TOKEN: <+secrets.getValue("localstack-ci-key")>
+        execution:
+          steps:
+            - step:
+                type: Run
+                name: localstack health
+                identifier: localstack_health
+                spec:
+                  connectorRef: docker_hub
+                  image: curlimages/curl:7.83.1
+                  shell: Sh
+                  command: until curl --fail --silent --max-time 1 http://localstack:4566/_localstack/health; do sleep 2; done

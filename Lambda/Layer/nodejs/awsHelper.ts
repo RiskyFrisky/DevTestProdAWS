@@ -14,13 +14,7 @@ import { EndpointV2 } from "@aws-sdk/types";
 const config: any = {
     region: process.env.AWS_REGION ?? "us-east-1"
 };
-if (process.env.NODE_ENV !== "test") {
-    config.credentials = {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-        sessionToken: process.env.AWS_SESSION_TOKEN
-    };
-}
+
 if (process.env.LOCALSTACK_HOST) {
     const endpoint: EndpointV2 = {
         url: new URL(`http://${process.env.LOCALSTACK_HOST}:4566`)
@@ -29,6 +23,12 @@ if (process.env.LOCALSTACK_HOST) {
     config.credentials = {
         accessKeyId: "any",
         secretAccessKey: "any"
+    };
+} else if (process.env.NODE_ENV !== "test") {
+    config.credentials = {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        sessionToken: process.env.AWS_SESSION_TOKEN
     };
 }
 
