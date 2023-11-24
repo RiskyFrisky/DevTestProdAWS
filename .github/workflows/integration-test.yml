@@ -12,11 +12,12 @@ jobs:
         image: localstack/localstack-pro:latest
         env:
           LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
-          ACTIVATE_PRO: 1
           DEBUG: 1
         ports:
           - 4566:4566
           - 4510-4559:4510-4559
+        volumes:
+          - volume:/var/lib/localstack
     env:
       LOCALSTACK_HOST: localhost.localstack.cloud
       LOCALSTACK_HOSTNAME: localhost.localstack.cloud
@@ -45,7 +46,7 @@ jobs:
         working-directory: ./Cloudformation
         run: |
           samlocal build --template-file template.yaml
-          samlocal deploy --config-file samconfig.toml --capabilities CAPABILITY_NAMED_IAM --no-confirm-changeset --debug
+          samlocal deploy --config-file samconfig.toml --capabilities CAPABILITY_NAMED_IAM --no-confirm-changeset
       - name: Get function url
         run: |
           echo FUNCTION_URL=$(awslocal lambda list-function-url-configs --function-name devtestprodaws-main | grep -o '"FunctionUrl": "[^"]*' | awk -F'"' '{print $4}') >> $GITHUB_ENV
