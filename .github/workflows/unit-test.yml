@@ -1,9 +1,7 @@
 name: unit-test
 on:
   push:
-    branches: ["main", "dev"]
-  pull_request:
-    branches: ["main", "dev"]
+    branches: ["dev"]
 jobs:
   unit-test-job:
     runs-on: ubuntu-latest

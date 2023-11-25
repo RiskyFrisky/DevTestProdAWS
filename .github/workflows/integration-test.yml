@@ -1,9 +1,7 @@
 name: integration-test
 on:
   push:
-    branches: ["main", "dev"]
-  pull_request:
-    branches: ["main", "dev"]
+    branches: ["dev"]
 jobs:
   integration-test-job:
     runs-on: self-hosted
@@ -18,15 +16,20 @@ jobs:
           - "4566:4566" # LocalStack Gateway
           - "4510-4559:4510-4559" # external services port range
         volumes:
-          - "/var/run/docker.sock:/var/run/docker.sock"
+          - "/var/run/docker.sock:/var/run/docker.sock" # mount the Docker socket - required for Lambda use in Localstack
     env:
       SAM_CLI_TELEMETRY: 0
       LOCALSTACK_HOST: localhost.localstack.cloud
     steps:
       # Get code
-      - uses: actions/checkout@v3
-      # Start LocalStack
-      - name: Start LocalStack
+      - uses: actions/checkout@v4
+      # Setup cache
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+          cache: "pip" # caching pip dependencies
+      # Install tools
+      - name: Install tools
         run: |
           pip install localstack awscli-local[ver1] aws-sam-cli-local   # install LocalStack cli, awslocal, and SAM cli
 
