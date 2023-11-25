@@ -14,12 +14,15 @@ jobs:
           LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
           DEBUG: 1
         ports:
-          # - 4566:4566
-          - 4000-5000:4000-5000
+          - "127.0.0.1:4566:4566" # LocalStack Gateway
+          - "127.0.0.1:4510-4559:4510-4559" # external services port range
+          - "127.0.0.1:53:53" # DNS config (required for Pro)
+          - "127.0.0.1:53:53/udp" # DNS config (required for Pro)
+          - "127.0.0.1:443:443" # LocalStack HTTPS Gateway (required for Pro)
     env:
-      LOCALSTACK_HOST: localhost.localstack.cloud
-      LOCALSTACK_HOSTNAME: localhost.localstack.cloud
-      HOSTNAME_EXTERNAL: localhost.localstack.cloud
+      LOCALSTACK_HOST: localhost
+      LOCALSTACK_HOSTNAME: localhost
+      HOSTNAME_EXTERNAL: localhost
       SAM_CLI_TELEMETRY: 0
     steps:
       # Get code
