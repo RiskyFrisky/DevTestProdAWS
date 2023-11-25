@@ -21,6 +21,7 @@ jobs:
       # Setup Bun
       - uses: oven-sh/setup-bun@v1
       - run: bun i
+      # Run tests
       - name: Run tests
         working-directory: ./Lambda/__test__/unit
         run: bun test
