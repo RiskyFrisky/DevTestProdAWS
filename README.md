@@ -84,4 +84,5 @@ Test action locally with `act`
 ```bash
 gh act --secret-file .env --job unit-test-job
 gh act --secret-file .env --job integration-test-job
+gh act --job deploy-job
 ```
