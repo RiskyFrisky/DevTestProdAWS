@@ -23,9 +23,9 @@ jobs:
         volumes:
           - "/var/run/docker.sock:/var/run/docker.sock"
     env:
-      LOCALSTACK_HOST: localhost
-      LOCALSTACK_HOSTNAME: localhost
-      HOSTNAME_EXTERNAL: localhost
+      LOCALSTACK_HOST: 127.0.0.1
+      LOCALSTACK_HOSTNAME: 127.0.0.1
+      HOSTNAME_EXTERNAL: 127.0.0.1
       SAM_CLI_TELEMETRY: 0
     steps:
       # Get code
