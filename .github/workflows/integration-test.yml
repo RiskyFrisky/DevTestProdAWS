@@ -5,6 +5,9 @@ on:
 jobs:
   integration-test-job:
     runs-on: self-hosted
+    env:
+      SAM_CLI_TELEMETRY: 0
+      LOCALSTACK_HOST: localhost.localstack.cloud
     services:
       localstack:
         image: localstack/localstack-pro:latest
@@ -12,15 +15,12 @@ jobs:
           LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
           DEBUG: 1
           DOCKER_HOST: unix:///var/run/docker.sock
+          EAGER_SERVICE_LOADING: 1
         ports:
           - "4566:4566" # LocalStack Gateway
           - "4510-4559:4510-4559" # external services port range
         volumes:
           - "/var/run/docker.sock:/var/run/docker.sock" # mount the Docker socket - required for Lambda use in Localstack
-    env:
-      SAM_CLI_TELEMETRY: 0
-      LOCALSTACK_HOST: localhost.localstack.cloud
-      EAGER_SERVICE_LOADING: 1
     steps:
       # Get code
       - uses: actions/checkout@v4
