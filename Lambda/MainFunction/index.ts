@@ -1,5 +1,4 @@
 import { Handler } from "aws-lambda";
-import { Handler } from "aws-lambda";
 
 import { rootPath } from "get-root-path";
 const layerPath = "/opt/nodejs/dist";
