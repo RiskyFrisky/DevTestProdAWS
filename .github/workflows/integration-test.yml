@@ -20,6 +20,7 @@ jobs:
     env:
       SAM_CLI_TELEMETRY: 0
       LOCALSTACK_HOST: localhost.localstack.cloud
+      EAGER_SERVICE_LOADING: 1
     steps:
       # Get code
       - uses: actions/checkout@v4
