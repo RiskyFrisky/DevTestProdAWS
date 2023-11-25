@@ -6,7 +6,7 @@ on:
     branches: ["main", "dev"]
 jobs:
   integration-test-job:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     services:
       localstack:
         image: localstack/localstack-pro:latest
@@ -24,7 +24,7 @@ jobs:
       LOCALSTACK_HOST: localhost.localstack.cloud
       LOCALSTACK_HOSTNAME: localhost.localstack.cloud
       HOSTNAME_FROM_LAMBDA: localhost.localstack.cloud
-      LAMBDA_DOCKER_NETWORK: host
+      # LAMBDA_DOCKER_NETWORK: host
     steps:
       # Get code
       - uses: actions/checkout@v3
