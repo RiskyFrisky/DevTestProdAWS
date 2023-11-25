@@ -11,6 +11,15 @@ jobs:
     steps:
       # Get code
       - uses: actions/checkout@v4
+      # Setup pip cache
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10" # should match python version on self-hosted runner
+          cache: "pip" # caching pip dependencies
+      # Install tools
+      - name: Install tools
+        run: |
+          pip install -r deploy.requirements.txt      # instal SAM cli
       # Get AWS credentials
       - name: Configure AWS Credentials
         if: ${{ !env.ACT }}
@@ -30,5 +39,5 @@ jobs:
       - name: Deploy SAM Template
         working-directory: ./Cloudformation
         run: |
-          samlocal build --template-file template.yaml
-          samlocal deploy --config-file samconfig.toml --capabilities CAPABILITY_NAMED_IAM --no-confirm-changeset
+          sam build --template-file template.yaml
+          sam deploy --config-file samconfig.toml --capabilities CAPABILITY_NAMED_IAM --no-confirm-changeset
