@@ -31,7 +31,7 @@ jobs:
       # Install tools
       - name: Install tools
         run: |
-          pip install localstack awscli-local[ver1] aws-sam-cli-local   # install LocalStack cli, awslocal, and SAM cli
+          pip install -r requirements.txt   # install LocalStack cli, awslocal, and SAM cli
 
           # docker pull localstack/localstack-pro     # Make sure to pull the latest version of the image
           # localstack start -d                       # Start LocalStack in the background
