@@ -1,4 +1,5 @@
 import { Handler } from "aws-lambda";
+import { Handler } from "aws-lambda";
 
 import { rootPath } from "get-root-path";
 const layerPath = "/opt/nodejs/dist";
@@ -31,11 +32,10 @@ export const handler: Handler = async (event) => {
                 color = res.color;
             }
 
-            return Promise.resolve({
+            return {
                 statusCode: 200,
-                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ color })
-            });
+            };
         } else if (method == "POST") {
             const { id } = query;
             const { color } = body;
@@ -45,17 +45,15 @@ export const handler: Handler = async (event) => {
                 JSON.stringify({ id, color })
             );
 
-            return Promise.resolve({
+            return {
                 statusCode: 202,
-                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ message: "Request is being processed" })
-            });
+            };
         }
     }
 
-    return Promise.resolve({
+    return {
         statusCode: 400,
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ error: "Unknown command" })
-    });
+    };
 };

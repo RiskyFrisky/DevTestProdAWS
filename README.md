@@ -1,5 +1,8 @@
 # DevTestProdAWS
 
+[![unit-test](https://github.com/RiskyFrisky/DevTestProdAWS/actions/workflows/unit-test.yml/badge.svg?branch=dev)](https://github.com/RiskyFrisky/DevTestProdAWS/actions/workflows/unit-test.yml)
+[![integration-test](https://github.com/RiskyFrisky/DevTestProdAWS/actions/workflows/integration-test.yml/badge.svg?branch=dev)](https://github.com/RiskyFrisky/DevTestProdAWS/actions/workflows/integration-test.yml)
+
 Pre-requisites
 
 1. Bun: https://bun.sh/docs/installation
