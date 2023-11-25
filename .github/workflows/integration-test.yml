@@ -9,6 +9,7 @@ jobs:
       SAM_CLI_TELEMETRY: 0
       LOCALSTACK_HOST: localhost.localstack.cloud
       LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
+      DEBUG: 1
     # services:
     #   localstack:
     #     image: localstack/localstack-pro:latest
