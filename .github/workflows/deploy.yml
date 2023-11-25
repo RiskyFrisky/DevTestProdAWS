@@ -1,0 +1,45 @@
+name: deploy
+on:
+  push:
+    branches: ["main"]
+jobs:
+  deploy-job:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    env:
+      SAM_CLI_TELEMETRY: 0
+    steps:
+      # Get code
+      - uses: actions/checkout@v4
+      # Setup pip cache
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10" # should match python version on self-hosted runner
+          cache: "pip" # caching pip dependencies
+      # Install tools
+      - name: Install tools
+        run: |
+          pip install -r deploy.requirements.txt      # instal SAM cli
+      # Get AWS credentials
+      - name: Configure AWS Credentials
+        if: ${{ !env.ACT }}
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/GithubActionsRole
+          aws-region: us-east-1
+      # Setup Bun
+      - uses: oven-sh/setup-bun@v1
+      # Build Lambda Layer
+      - name: Build Lambda Layer
+        working-directory: ./Lambda/Layer/nodejs
+        run: |
+          bun i
+          bun run compile
+      # Build and deploy SAM template
+      - name: Deploy SAM Template
+        working-directory: ./Cloudformation
+        run: |
+          sam build --template-file template.yaml
+          sam deploy --config-file samconfig.toml --capabilities CAPABILITY_NAMED_IAM --no-confirm-changeset
