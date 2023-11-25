@@ -7,19 +7,19 @@ on:
 jobs:
   integration-test-job:
     runs-on: ubuntu-latest
-    # services:
-    #   localstack:
-    #     image: localstack/localstack-pro:latest
-    #     env:
-    #       LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
-    #       DEBUG: 1
-    #     ports:
-    #       - 4566:4566
-    #       - 4510-4559:4510-4559
+    services:
+      localstack:
+        image: localstack/localstack-pro:latest
+        env:
+          LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
+          DEBUG: 1
+        ports:
+          - 4566:4566
+          - 4510-4559:4510-4559
     env:
-      LOCALSTACK_HOST: localhost.localstack.cloud
-      LOCALSTACK_HOSTNAME: localhost.localstack.cloud
-      HOSTNAME_EXTERNAL: localhost.localstack.cloud
+      LOCALSTACK_HOST: localstack
+      LOCALSTACK_HOSTNAME: localstack
+      HOSTNAME_EXTERNAL: localstack
       SAM_CLI_TELEMETRY: 0
     steps:
       # Get code
@@ -29,10 +29,10 @@ jobs:
         run: |
           pip install localstack awscli-local[ver1] aws-sam-cli-local   # install LocalStack cli, awslocal, and SAM cli
 
-          docker pull localstack/localstack-pro     # Make sure to pull the latest version of the image
-          localstack start -d                       # Start LocalStack in the background
-          echo "Waiting for LocalStack startup..."  # Wait 30 seconds for the LocalStack container
-          localstack wait -t 30                     # to become ready before timing out
+          # docker pull localstack/localstack-pro     # Make sure to pull the latest version of the image
+          # localstack start -d                       # Start LocalStack in the background
+          # echo "Waiting for LocalStack startup..."  # Wait 30 seconds for the LocalStack container
+          # localstack wait -t 30                     # to become ready before timing out
 
           echo "Startup complete"
       - name: Create S3 Bucket
