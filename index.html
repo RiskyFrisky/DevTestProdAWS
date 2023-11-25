@@ -40,7 +40,10 @@
         <div class="container">
             <div class="column">
                 <h2>Set Color</h2>
-                <form id="set-color-form" onsubmit="setColor(); return false;">
+                <form
+                    id="set-color-form"
+                    onsubmit="setTheColor(); return false;"
+                >
                     <label for="setUserId">User ID:</label>
                     <input
                         type="text"
@@ -81,7 +84,7 @@
                     <button type="submit">Get Color</button>
 
                     <p id="colorResult">
-                        Selected Color: <span id="currentColor"></span>
+                        Selected color: <span id="currentColor"></span>
                     </p>
 
                     <div id="errorMessageContainer">
@@ -92,7 +95,9 @@
         </div>
 
         <script>
-            function setColor() {
+            function setTheColor() {
+                console.log("setTheColor");
+
                 const setUserId = document
                     .getElementById("setUserId")
                     .value.trim();
@@ -114,15 +119,22 @@
                                 throw new Error(errorMessage);
                             });
                         }
+                        return response.json();
+                    })
+                    .then((data) => {
+                        console.log(data);
                     })
                     .catch((error) => {
+                        console.log("error", error);
                         document.getElementById(
                             "errorMessage"
                         ).textContent = `Error: ${error.message}`;
                     });
             }
 
-            function getColor() {
+            function getColor(e) {
+                console.log("getColor");
+
                 const getUserId = document
                     .getElementById("getUserId")
                     .value.trim();
@@ -139,16 +151,19 @@
                         return response.json();
                     })
                     .then((data) => {
+                        console.log(data);
+
                         const selectedColor = data.color;
 
                         document.getElementById("currentColor").textContent =
-                            selectedColor;
+                            selectedColor ?? "null";
                         document.getElementById("currentColor").style.color =
                             selectedColor;
                         document.getElementById("errorMessage").textContent =
                             ""; // Clear any previous error message
                     })
                     .catch((error) => {
+                        console.log("error", error);
                         document.getElementById(
                             "errorMessage"
                         ).textContent = `Error: ${error.message}`;
