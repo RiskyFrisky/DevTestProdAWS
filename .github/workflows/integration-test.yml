@@ -32,7 +32,7 @@ jobs:
       # Install tools
       - name: Install tools
         run: |
-          pip install -r test.requirements.txt        # install LocalStack cli, awslocal, and SAM cli
+          pip install -r requirements.txt             # install LocalStack cli, awslocal, and SAM cli
 
           # docker pull localstack/localstack-pro     # Make sure to pull the latest version of the image
           # localstack start -d                       # Start LocalStack in the background
