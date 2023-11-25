@@ -15,11 +15,11 @@ jobs:
           DEBUG: 1
         ports:
           - 4566:4566
-          - 4510-4559:4510-4559
+          - 4000-5000:4000-5000
     env:
-      LOCALSTACK_HOST: localstack
-      LOCALSTACK_HOSTNAME: localstack
-      HOSTNAME_EXTERNAL: localstack
+      LOCALSTACK_HOST: localhost.localstack.cloud
+      LOCALSTACK_HOSTNAME: localhost.localstack.cloud
+      HOSTNAME_EXTERNAL: localhost.localstack.cloud
       SAM_CLI_TELEMETRY: 0
     steps:
       # Get code
