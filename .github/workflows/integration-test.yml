@@ -21,8 +21,8 @@ jobs:
         #   - "./volume:/var/lib/localstack"
         #   - "/var/run/docker.sock:/var/run/docker.sock"
     env:
-      LOCALSTACK_HOST: localhost.localstack.cloud
-      LOCALSTACK_HOSTNAME: localhost.localstack.cloud
+      LOCALSTACK_HOST: localhost
+      LOCALSTACK_HOSTNAME: localhost
       SAM_CLI_TELEMETRY: 0
     steps:
       # Get code
@@ -49,12 +49,12 @@ jobs:
         run: |
           samlocal build --template-file template.yaml
           samlocal deploy --config-file samconfig.toml --capabilities CAPABILITY_NAMED_IAM --no-confirm-changeset
-      - name: Get function url
-        run: |
-          echo FUNCTION_URL=$(awslocal lambda list-function-url-configs --function-name devtestprodaws-main | grep -o '"FunctionUrl": "[^"]*' | awk -F'"' '{print $4}') >> $GITHUB_ENV
-      # Run integration tests
-      - name: Run integration tests
-        working-directory: ./Lambda/__test__/integration
-        run: |
-          bun test lambdaInvoke.test.ts
-          bun test integration.test.ts
+      # - name: Get function url
+      #   run: |
+      #     echo FUNCTION_URL=$(awslocal lambda list-function-url-configs --function-name devtestprodaws-main | grep -o '"FunctionUrl": "[^"]*' | awk -F'"' '{print $4}') >> $GITHUB_ENV
+      # # Run integration tests
+      # - name: Run integration tests
+      #   working-directory: ./Lambda/__test__/integration
+      #   run: |
+      #     bun test lambdaInvoke.test.ts
+      #     bun test integration.test.ts

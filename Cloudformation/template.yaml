@@ -57,8 +57,8 @@ Resources:
     Properties:
       LayerName: !Sub ${AWS::StackName}-layer
       Description: Shared resources
-      # CompatibleArchitectures:
-      #   - arm64
+      CompatibleArchitectures:
+        - arm64
       CompatibleRuntimes:
         - nodejs18.x
       ContentUri: ../Lambda/Layer
@@ -66,8 +66,8 @@ Resources:
   MainFunction:
     Type: AWS::Serverless::Function
     Properties:
-      # Architectures:
-      #   - arm64
+      Architectures:
+        - arm64
       FunctionName: !Sub ${AWS::StackName}-main
       Description: Main function
       Handler: index.handler
@@ -79,8 +79,8 @@ Resources:
       CodeUri: ../Lambda/MainFunction
       Layers:
         - !Ref Layer
-      FunctionUrlConfig:
-        AuthType: NONE
+      # FunctionUrlConfig:
+      #   AuthType: NONE
     Metadata: # Manage esbuild properties - https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-using-build-typescript.html#serverless-sam-cli-using-build-typescript-example
       BuildMethod: esbuild
       BuildProperties:
@@ -97,8 +97,8 @@ Resources:
   WorkerFunction:
     Type: AWS::Serverless::Function
     Properties:
-      # Architectures:
-      #   - arm64
+      Architectures:
+        - arm64
       FunctionName: !Sub ${AWS::StackName}-worker
       Description: Main function
       Handler: index.handler
@@ -162,7 +162,7 @@ Resources:
       EventSourceArn: !GetAtt Queue.Arn
       FunctionName: !GetAtt WorkerFunction.Arn
       BatchSize: "1"
-Outputs:
-  MainFunctionUrl:
-    Description: MainFunction URL
-    Value: !GetAtt MainFunctionUrl.FunctionUrl
+# Outputs:
+#   MainFunctionUrl:
+#     Description: MainFunction URL
+#     Value: !GetAtt MainFunctionUrl.FunctionUrl
