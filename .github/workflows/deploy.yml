@@ -8,6 +8,8 @@ jobs:
     permissions:
       id-token: write
       contents: read
+    env:
+      SAM_CLI_TELEMETRY: 0
     steps:
       # Get code
       - uses: actions/checkout@v4
