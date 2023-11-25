@@ -45,7 +45,7 @@ sam build --template-file template.yaml
 
 Deploy on LocalStack (Requires PRO account for LambdaLayer use)
 
--   Get auth token: https://app.localstack.cloud/workspace/auth-token & set in .env
+-   Get auth token from https://app.localstack.cloud/workspace/auth-token & set in `.env` file
 
 ```bash
 cd $(git rev-parse --show-toplevel)/Lambda/__test__/integration/localstack

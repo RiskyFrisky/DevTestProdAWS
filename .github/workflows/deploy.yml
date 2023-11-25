@@ -11,6 +11,14 @@ jobs:
     env:
       SAM_CLI_TELEMETRY: 0
     steps:
+      # Wait on test jobs to complete
+      - name: Wait on tests
+        uses: lewagon/wait-on-check-action@v1.3.1
+        with:
+          ref: ${{ github.sha }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          running-workflow-name: wait-for-check-regexp
+          check-regexp: .?-test-job
       # Get code
       - uses: actions/checkout@v4
       # Setup pip cache

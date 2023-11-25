@@ -1,28 +1,25 @@
 name: integration-test
 on:
   push:
-    branches: ["dev"]
+    branches: ["dev", "main"]
 jobs:
   integration-test-job:
     runs-on: self-hosted
     env:
       SAM_CLI_TELEMETRY: 0
       LOCALSTACK_HOST: localhost.localstack.cloud
-      LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
-      DEBUG: 1
-    # services:
-    #   localstack:
-    #     image: localstack/localstack-pro:latest
-    #     env:
-    #       LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
-    #       DEBUG: 1
-    #       DOCKER_HOST: unix:///var/run/docker.sock
-    #       EAGER_SERVICE_LOADING: 1
-    #     ports:
-    #       - "4566:4566" # LocalStack Gateway
-    #       - "4510-4559:4510-4559" # external services port range
-    #     volumes:
-    #       - "/var/run/docker.sock:/var/run/docker.sock" # mount the Docker socket - required for Lambda use in Localstack
+    services:
+      localstack:
+        image: localstack/localstack-pro:latest
+        env:
+          LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
+          DEBUG: 1
+          DOCKER_HOST: unix:///var/run/docker.sock
+        ports:
+          - "4566:4566" # LocalStack Gateway
+          - "4510-4559:4510-4559" # external services port range
+        volumes:
+          - "/var/run/docker.sock:/var/run/docker.sock" # mount the Docker socket - required for Lambda use in Localstack
     steps:
       # Get code
       - uses: actions/checkout@v4
@@ -33,13 +30,16 @@ jobs:
           cache: "pip" # caching pip dependencies
       # Install tools
       - name: Install tools
+        # env:
+        #   LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
+        #   DEBUG: 1
         run: |
           pip install -r requirements.txt               # install LocalStack cli, awslocal, and SAM cli
 
-          docker pull localstack/localstack-pro:latest  # Make sure to pull the latest version of the image
-          localstack start -d                           # Start LocalStack in the background
-          echo "Waiting for LocalStack startup..."      # Wait 30 seconds for the LocalStack container
-          localstack wait -t 30                         # to become ready before timing out
+          # docker pull localstack/localstack-pro:latest  # Make sure to pull the latest version of the image
+          # localstack start -d                           # Start LocalStack in the background
+          # echo "Waiting for LocalStack startup..."      # Wait 30 seconds for the LocalStack container
+          # localstack wait -t 30                         # to become ready before timing out
 
           echo "Startup complete"
       - name: Create S3 Bucket

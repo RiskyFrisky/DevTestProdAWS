@@ -1,7 +1,7 @@
 name: unit-test
 on:
   push:
-    branches: ["dev"]
+    branches: ["dev", "main"]
 jobs:
   unit-test-job:
     runs-on: ubuntu-latest
