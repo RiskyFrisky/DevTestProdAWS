@@ -20,42 +20,49 @@ export const handler: Handler = async (event) => {
     };
     const { path, method, query, body } = request;
 
-    if (path == "/color") {
-        if (method == "GET") {
-            const { id } = query;
+    try {
+        if (path == "/color") {
+            if (method == "GET") {
+                const { id } = query;
 
-            const res = await awsHelper.getItem("devtestprodaws-database", id);
+                const res = await awsHelper.getItem(
+                    "devtestprodaws-database",
+                    id
+                );
 
-            let color = null;
-            if (res) {
-                color = res.color;
+                let color = null;
+                if (res) {
+                    color = res.color;
+                }
+
+                return Promise.resolve({
+                    statusCode: 200,
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ color })
+                });
+            } else if (method == "POST") {
+                const { id } = query;
+                const { color } = body;
+
+                await awsHelper.sendMessage(
+                    "devtestprodaws-queue",
+                    JSON.stringify({ id, color })
+                );
+
+                return Promise.resolve({
+                    statusCode: 202,
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        message: "Request is being processed"
+                    })
+                });
             }
-
-            return Promise.resolve({
-                statusCode: 200,
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ color })
-            });
-        } else if (method == "POST") {
-            const { id } = query;
-            const { color } = body;
-
-            await awsHelper.sendMessage(
-                "devtestprodaws-queue",
-                JSON.stringify({ id, color })
-            );
-
-            return Promise.resolve({
-                statusCode: 202,
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: "Request is being processed" })
-            });
         }
-    }
+    } catch (err) {}
 
     return Promise.resolve({
         statusCode: 400,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ error: "Unknown command" })
+        body: JSON.stringify({ error: "Unknown command or missing params" })
     });
 };
