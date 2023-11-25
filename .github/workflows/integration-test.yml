@@ -26,6 +26,7 @@ jobs:
       # Setup cache
       - uses: actions/setup-python@v4
         with:
+          python-version: "3.10" # should match python version on self-hosted runner
           cache: "pip" # caching pip dependencies
       # Install tools
       - name: Install tools
