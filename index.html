@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>User Color Page</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+            }
+
+            .container {
+                display: flex;
+            }
+
+            .column {
+                flex: 1;
+                padding: 20px;
+            }
+
+            #set-color-form,
+            #get-color-form {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            #errorMessageContainer {
+                margin-top: 10px;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="column">
+                <h2>Set Color</h2>
+                <form id="set-color-form" onsubmit="setColor(); return false;">
+                    <label for="setUserId">User ID:</label>
+                    <input
+                        type="text"
+                        id="setUserId"
+                        name="setUserId"
+                        required
+                    />
+
+                    <label for="setColor">Color:</label>
+                    <select id="setColor" name="setColor" required>
+                        <option value="red">Red</option>
+                        <option value="green">Green</option>
+                        <option value="blue">Blue</option>
+                        <option value="yellow">Yellow</option>
+                        <option value="orange">Orange</option>
+                        <option value="purple">Purple</option>
+                        <option value="pink">Pink</option>
+                        <option value="brown">Brown</option>
+                        <option value="black">Black</option>
+                        <option value="white">White</option>
+                    </select>
+
+                    <button type="submit">Set Color</button>
+                </form>
+            </div>
+
+            <div class="column">
+                <h2>Get Color</h2>
+                <form id="get-color-form" onsubmit="getColor(); return false;">
+                    <label for="getUserId">User ID:</label>
+                    <input
+                        type="text"
+                        id="getUserId"
+                        name="getUserId"
+                        required
+                    />
+
+                    <button type="submit">Get Color</button>
+
+                    <p id="colorResult">
+                        Selected Color: <span id="currentColor"></span>
+                    </p>
+
+                    <div id="errorMessageContainer">
+                        <p id="errorMessage" style="color: red"></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            function setColor() {
+                const setUserId = document
+                    .getElementById("setUserId")
+                    .value.trim();
+                const setColor = document.getElementById("setColor").value;
+
+                fetch(
+                    `https://av72weggyegmad3jls7hqratj40pdfrs.lambda-url.us-east-1.on.aws/color?id=${setUserId}`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ color: setColor })
+                    }
+                )
+                    .then((response) => {
+                        if (!response.ok) {
+                            return response.text().then((errorMessage) => {
+                                throw new Error(errorMessage);
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        document.getElementById(
+                            "errorMessage"
+                        ).textContent = `Error: ${error.message}`;
+                    });
+            }
+
+            function getColor() {
+                const getUserId = document
+                    .getElementById("getUserId")
+                    .value.trim();
+
+                fetch(
+                    `https://av72weggyegmad3jls7hqratj40pdfrs.lambda-url.us-east-1.on.aws/color?id=${getUserId}`
+                )
+                    .then((response) => {
+                        if (!response.ok) {
+                            return response.text().then((errorMessage) => {
+                                throw new Error(errorMessage);
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then((data) => {
+                        const selectedColor = data.color;
+
+                        document.getElementById("currentColor").textContent =
+                            selectedColor;
+                        document.getElementById("currentColor").style.color =
+                            selectedColor;
+                        document.getElementById("errorMessage").textContent =
+                            ""; // Clear any previous error message
+                    })
+                    .catch((error) => {
+                        document.getElementById(
+                            "errorMessage"
+                        ).textContent = `Error: ${error.message}`;
+                    });
+            }
+        </script>
+    </body>
+</html>

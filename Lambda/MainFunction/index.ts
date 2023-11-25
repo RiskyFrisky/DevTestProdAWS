@@ -21,39 +21,52 @@ export const handler: Handler = async (event) => {
     };
     const { path, method, query, body } = request;
 
-    if (path == "/color") {
-        if (method == "GET") {
-            const { id } = query;
+    try {
+        if (path == "/color") {
+            if (method == "GET") {
+                const { id } = query;
 
-            const res = await awsHelper.getItem("devtestprodaws-database", id);
+                const res = await awsHelper.getItem(
+                    "devtestprodaws-database",
+                    id
+                );
 
-            let color = null;
-            if (res) {
-                color = res.color;
+                let color = null;
+                if (res) {
+                    color = res.color;
+                }
+
+                return {
+                    statusCode: 200,
+                    body: JSON.stringify({ color })
+                };
+            } else if (method == "POST") {
+                const { id } = query;
+                const { color } = body;
+
+                await awsHelper.sendMessage(
+                    "devtestprodaws-queue",
+                    JSON.stringify({ id, color })
+                );
+
+                return {
+                    statusCode: 202,
+                    body: JSON.stringify({
+                        message: "Request is being processed"
+                    })
+                };
             }
-
-            return {
-                statusCode: 200,
-                body: JSON.stringify({ color })
-            };
-        } else if (method == "POST") {
-            const { id } = query;
-            const { color } = body;
-
-            await awsHelper.sendMessage(
-                "devtestprodaws-queue",
-                JSON.stringify({ id, color })
-            );
-
-            return {
-                statusCode: 202,
-                body: JSON.stringify({ message: "Request is being processed" })
-            };
         }
-    }
+    } catch (err) {}
 
     return {
+        headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET,POST",
+            "Access-Control-Allow-Headers": "Content-Type"
+        },
         statusCode: 400,
-        body: JSON.stringify({ error: "Unknown command" })
+        body: JSON.stringify({ error: "Unknown command or missing params" })
     };
 };
