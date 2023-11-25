@@ -37,6 +37,12 @@ export const handler: Handler = async (event) => {
                 }
 
                 return {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Origin": "*",
+                        "Access-Control-Allow-Methods": "GET",
+                        "Access-Control-Allow-Headers": "Content-Type"
+                    },
                     statusCode: 200,
                     body: JSON.stringify({ color })
                 };
@@ -50,6 +56,12 @@ export const handler: Handler = async (event) => {
                 );
 
                 return {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Origin": "*",
+                        "Access-Control-Allow-Methods": "POST",
+                        "Access-Control-Allow-Headers": "Content-Type"
+                    },
                     statusCode: 202,
                     body: JSON.stringify({
                         message: "Request is being processed"
