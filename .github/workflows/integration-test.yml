@@ -10,7 +10,6 @@ jobs:
     services:
       localstack:
         image: localstack/localstack-pro:latest
-        hostname: localstack
         env:
           LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
           DEBUG: 1
