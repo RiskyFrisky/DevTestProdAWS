@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       localstack:
+        network_mode: bridge
         image: localstack/localstack-pro:latest
         env:
           LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
