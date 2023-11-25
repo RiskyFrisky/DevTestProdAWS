@@ -13,12 +13,15 @@ jobs:
         env:
           LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
           DEBUG: 1
+          DOCKER_HOST: unix:///var/run/docker.sock
         ports:
           - "127.0.0.1:4566:4566" # LocalStack Gateway
           - "127.0.0.1:4510-4559:4510-4559" # external services port range
           - "127.0.0.1:53:53" # DNS config (required for Pro)
           - "127.0.0.1:53:53/udp" # DNS config (required for Pro)
           - "127.0.0.1:443:443" # LocalStack HTTPS Gateway (required for Pro)
+        volume:
+          - "/var/run/docker.sock:/var/run/docker.sock"
     env:
       LOCALSTACK_HOST: localhost
       LOCALSTACK_HOSTNAME: localhost
