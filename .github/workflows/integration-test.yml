@@ -68,3 +68,6 @@ jobs:
         run: |
           bun test lambdaInvoke.test.ts
           bun test integration.test.ts
+      # Remove Lambda Docker containers
+      - name: Cleanup Lambdas
+        run: docker ps -a | grep "public.ecr.aws/lambda/nodejs:18" | awk '{print $1}' | xargs docker rm -f
