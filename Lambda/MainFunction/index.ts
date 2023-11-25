@@ -1,4 +1,5 @@
 import { Handler } from "aws-lambda";
+import { Handler } from "aws-lambda";
 
 import { rootPath } from "get-root-path";
 const layerPath = "/opt/nodejs/dist";
@@ -71,12 +72,6 @@ export const handler: Handler = async (event) => {
     } catch (err) {}
 
     return {
-        headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "*",
-            "Access-Control-Allow-Headers": "*"
-        },
         statusCode: 400,
         body: JSON.stringify({ error: "Unknown command or missing params" })
     };

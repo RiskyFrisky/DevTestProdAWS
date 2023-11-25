@@ -1,5 +1,13 @@
 # DevTestProdAWS
 
+#### Main Branch
+
+[![unit-test](https://github.com/RiskyFrisky/DevTestProdAWS/actions/workflows/unit-test.yml/badge.svg?branch=main)](https://github.com/RiskyFrisky/DevTestProdAWS/actions/workflows/unit-test.yml)
+[![integration-test](https://github.com/RiskyFrisky/DevTestProdAWS/actions/workflows/integration-test.yml/badge.svg?branch=main)](https://github.com/RiskyFrisky/DevTestProdAWS/actions/workflows/integration-test.yml)
+[![deploy](https://github.com/RiskyFrisky/DevTestProdAWS/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/RiskyFrisky/DevTestProdAWS/actions/workflows/deploy.yml)
+
+#### Dev Branch
+
 [![unit-test](https://github.com/RiskyFrisky/DevTestProdAWS/actions/workflows/unit-test.yml/badge.svg?branch=dev)](https://github.com/RiskyFrisky/DevTestProdAWS/actions/workflows/unit-test.yml)
 [![integration-test](https://github.com/RiskyFrisky/DevTestProdAWS/actions/workflows/integration-test.yml/badge.svg?branch=dev)](https://github.com/RiskyFrisky/DevTestProdAWS/actions/workflows/integration-test.yml)
 

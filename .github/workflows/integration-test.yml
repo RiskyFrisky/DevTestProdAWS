@@ -10,7 +10,7 @@ jobs:
       LOCALSTACK_HOST: localhost.localstack.cloud
     services:
       localstack:
-        image: localstack/localstack-pro:latest
+        image: localstack/localstack-pro:3.0.1
         env:
           LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
           DEBUG: 1
@@ -36,7 +36,7 @@ jobs:
         run: |
           pip install -r requirements.txt               # install LocalStack cli, awslocal, and SAM cli
 
-          # docker pull localstack/localstack-pro:latest  # Make sure to pull the latest version of the image
+          # docker pull localstack/localstack-pro:3.0.1   # Make sure to pull the latest version of the image
           # localstack start -d                           # Start LocalStack in the background
           # echo "Waiting for LocalStack startup..."      # Wait 30 seconds for the LocalStack container
           # localstack wait -t 30                         # to become ready before timing out
@@ -70,4 +70,5 @@ jobs:
           bun test integration.test.ts
       # Remove Lambda Docker containers
       - name: Cleanup Lambdas
+        if: always()
         run: docker ps -a | grep "public.ecr.aws/lambda/nodejs:18" | awk '{print $1}' | xargs docker rm -f
