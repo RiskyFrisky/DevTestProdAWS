@@ -22,9 +22,7 @@ jobs:
     env:
       SAM_CLI_TELEMETRY: 0
       LOCALSTACK_HOST: localhost.localstack.cloud
-      LOCALSTACK_HOSTNAME: localhost.localstack.cloud
-      HOSTNAME_FROM_LAMBDA: localhost.localstack.cloud
-      # LAMBDA_DOCKER_NETWORK: host
+      # LOCALSTACK_HOSTNAME: localhost.localstack.cloud
     steps:
       # Get code
       - uses: actions/checkout@v3

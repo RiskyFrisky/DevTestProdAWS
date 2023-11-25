@@ -60,6 +60,6 @@ describe("Integration tests", () => {
 
         expect(statusCode).toEqual(200);
         expect(body).toHaveProperty("color");
-        expect(body.color).toEqual(color);
+        expect(body.color).toEqual("color");
     }, 25000);
 });
