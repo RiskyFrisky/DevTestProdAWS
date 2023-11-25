@@ -1,0 +1,68 @@
+name: integration-test
+on:
+  push:
+    branches: ["dev"]
+jobs:
+  integration-test-job:
+    runs-on: self-hosted
+    env:
+      SAM_CLI_TELEMETRY: 0
+      LOCALSTACK_HOST: localhost.localstack.cloud
+    services:
+      localstack:
+        image: localstack/localstack-pro:latest
+        env:
+          LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
+          DEBUG: 1
+          DOCKER_HOST: unix:///var/run/docker.sock
+          EAGER_SERVICE_LOADING: 1
+        ports:
+          - "4566:4566" # LocalStack Gateway
+          - "4510-4559:4510-4559" # external services port range
+        volumes:
+          - "/var/run/docker.sock:/var/run/docker.sock" # mount the Docker socket - required for Lambda use in Localstack
+    steps:
+      # Get code
+      - uses: actions/checkout@v4
+      # Setup cache
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10" # should match python version on self-hosted runner
+          cache: "pip" # caching pip dependencies
+      # Install tools
+      - name: Install tools
+        run: |
+          pip install -r requirements.txt   # install LocalStack cli, awslocal, and SAM cli
+
+          # docker pull localstack/localstack-pro     # Make sure to pull the latest version of the image
+          # localstack start -d                       # Start LocalStack in the background
+          # echo "Waiting for LocalStack startup..."  # Wait 30 seconds for the LocalStack container
+          # localstack wait -t 30                     # to become ready before timing out
+
+          echo "Startup complete"
+      - name: Create S3 Bucket
+        run: awslocal s3 mb s3://devtestprodaws
+      # Setup Bun
+      - uses: oven-sh/setup-bun@v1
+      - run: bun i
+      # Build Lambda Layer
+      - name: Build Lambda Layer
+        working-directory: ./Lambda/Layer/nodejs
+        run: |
+          bun i
+          bun run compile
+      # Build and deploy SAM template
+      - name: Deploy SAM Template
+        working-directory: ./Cloudformation
+        run: |
+          samlocal build --template-file template.yaml
+          samlocal deploy --config-file samconfig.toml --capabilities CAPABILITY_NAMED_IAM --no-confirm-changeset
+      - name: Get function url
+        run: |
+          echo FUNCTION_URL=$(awslocal lambda list-function-url-configs --function-name devtestprodaws-main | grep -o '"FunctionUrl": "[^"]*' | awk -F'"' '{print $4}') >> $GITHUB_ENV
+      # Run integration tests
+      - name: Run integration tests
+        working-directory: ./Lambda/__test__/integration
+        run: |
+          bun test lambdaInvoke.test.ts
+          bun test integration.test.ts

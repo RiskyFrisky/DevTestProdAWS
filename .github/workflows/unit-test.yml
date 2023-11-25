@@ -1,11 +1,9 @@
-name: test
+name: unit-test
 on:
   push:
-    branches: ["main", "dev"]
-  pull_request:
-    branches: ["main", "dev"]
+    branches: ["dev"]
 jobs:
-  test:
+  unit-test-job:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -13,12 +11,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Configure AWS Credentials
+        if: ${{ !env.ACT }}
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/GithubActionsRole
           aws-region: us-east-1
       - uses: oven-sh/setup-bun@v1
       - run: bun i
-      - name: Run tests
-        working-directory: ./Lambda/__test__
+      - name: Run unit tests
+        working-directory: ./Lambda/__test__/unit
         run: bun test
