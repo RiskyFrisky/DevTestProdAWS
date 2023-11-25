@@ -9,27 +9,25 @@ jobs:
     runs-on: ubuntu-latest
     services:
       localstack:
-        network_mode: bridge
         image: localstack/localstack-pro:latest
         env:
           LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
           DEBUG: 1
           DOCKER_HOST: unix:///var/run/docker.sock
         ports:
-          - "127.0.0.1:4566:4566" # LocalStack Gateway
-          - "127.0.0.1:4510-4559:4510-4559" # external services port range
-          - "127.0.0.1:53:53" # DNS config (required for Pro)
-          - "127.0.0.1:53:53/udp" # DNS config (required for Pro)
-          - "127.0.0.1:443:443" # LocalStack HTTPS Gateway (required for Pro)
+          - "4566:4566" # LocalStack Gateway
+          - "4510-4559:4510-4559" # external services port range
+          - "53:53" # DNS config (required for Pro)
+          - "53:53/udp" # DNS config (required for Pro)
+          - "443:443" # LocalStack HTTPS Gateway (required for Pro)
         volumes:
           - "/var/run/docker.sock:/var/run/docker.sock"
     env:
       SAM_CLI_TELEMETRY: 0
-      LOCALSTACK_HOST: 127.0.0.1
-      LOCALSTACK_HOSTNAME: 127.0.0.1
-      HOSTNAME_EXTERNAL: 127.0.0.1
-      HOSTNAME_FROM_LAMBDA: 127.0.0.1
-      LAMBDA_DOCKER_NETWORK: bridge
+      LOCALSTACK_HOST: localhost
+      LOCALSTACK_HOSTNAME: localhost
+      HOSTNAME_FROM_LAMBDA: localhost
+      LAMBDA_DOCKER_NETWORK: host
     steps:
       # Get code
       - uses: actions/checkout@v3
