@@ -11,6 +11,12 @@
 [![unit-test](https://github.com/RiskyFrisky/DevTestProdAWS/actions/workflows/unit-test.yml/badge.svg?branch=dev)](https://github.com/RiskyFrisky/DevTestProdAWS/actions/workflows/unit-test.yml)
 [![integration-test](https://github.com/RiskyFrisky/DevTestProdAWS/actions/workflows/integration-test.yml/badge.svg?branch=dev)](https://github.com/RiskyFrisky/DevTestProdAWS/actions/workflows/integration-test.yml)
 
+This project was used as a learning tool to figure out how to develop a production-grade CI / CD workflow that would minimize the risk of publishing bad code into production AWS environments.
+
+Access application frontend: https://riskyfrisky.github.io/DevTestProdAWS
+
+# Steps for running on your PC
+
 Pre-requisites
 
 1. Bun: https://bun.sh/docs/installation
@@ -82,7 +88,7 @@ cd $(git rev-parse --show-toplevel)/Cloudformation
 sam deploy --config-file samconfig.toml --capabilities CAPABILITY_NAMED_IAM --no-confirm-changeset
 ```
 
-# GitHub Action:
+# Test GitHub actions locally
 
 Test action locally with `act`
 
