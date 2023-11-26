@@ -88,7 +88,7 @@ Resources:
             - "GET"
             - "POST"
           AllowOrigins:
-            - "*"
+            - "https://riskyfrisky.github.io"
     Metadata: # Manage esbuild properties - https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-using-build-typescript.html#serverless-sam-cli-using-build-typescript-example
       BuildMethod: esbuild
       BuildProperties:

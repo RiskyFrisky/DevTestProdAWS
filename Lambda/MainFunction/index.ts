@@ -1,5 +1,4 @@
 import { Handler } from "aws-lambda";
-import { Handler } from "aws-lambda";
 
 import { rootPath } from "get-root-path";
 const layerPath = "/opt/nodejs/dist";
@@ -38,10 +37,10 @@ export const handler: Handler = async (event) => {
 
                 return {
                     headers: {
-                        "Content-Type": "application/json",
-                        "Access-Control-Allow-Origin": "*",
-                        "Access-Control-Allow-Methods": "GET",
-                        "Access-Control-Allow-Headers": "Content-Type"
+                        "Content-Type": "application/json"
+                        // "Access-Control-Allow-Origin": "*",
+                        // "Access-Control-Allow-Methods": "GET",
+                        // "Access-Control-Allow-Headers": "Content-Type"
                     },
                     statusCode: 200,
                     body: JSON.stringify({ color })
@@ -57,10 +56,10 @@ export const handler: Handler = async (event) => {
 
                 return {
                     headers: {
-                        "Content-Type": "application/json",
-                        "Access-Control-Allow-Origin": "*",
-                        "Access-Control-Allow-Methods": "POST",
-                        "Access-Control-Allow-Headers": "Content-Type"
+                        "Content-Type": "application/json"
+                        // "Access-Control-Allow-Origin": "*",
+                        // "Access-Control-Allow-Methods": "POST",
+                        // "Access-Control-Allow-Headers": "Content-Type"
                     },
                     statusCode: 202,
                     body: JSON.stringify({
@@ -72,6 +71,12 @@ export const handler: Handler = async (event) => {
     } catch (err) {}
 
     return {
+        headers: {
+            "Content-Type": "application/json"
+            // "Access-Control-Allow-Origin": "*",
+            // "Access-Control-Allow-Methods": "GET, POST",
+            // "Access-Control-Allow-Headers": "Content-Type"
+        },
         statusCode: 400,
         body: JSON.stringify({ error: "Unknown command or missing params" })
     };
