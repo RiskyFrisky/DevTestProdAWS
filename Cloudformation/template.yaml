@@ -75,7 +75,7 @@ Resources:
       Role: !GetAtt ExecutionRole.Arn
       MemorySize: 256
       Timeout: 5
-      ReservedConcurrentExecutions: 1
+      ReservedConcurrentExecutions: 2
       CodeUri: ../Lambda/MainFunction
       Layers:
         - !Ref Layer
