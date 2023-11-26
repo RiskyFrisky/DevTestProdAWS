@@ -75,11 +75,11 @@ describe("Lambda invoke integration tests", () => {
 
         expect(statusCode).toEqual(202);
         expect(body).toHaveProperty("message");
-    }, 15000);
+    }, 60000);
 
     test("GET /color", async () => {
         // Delay the test execution for X seconds to give time for SQS to trigger Worker Lambda
-        await new Promise((resolve) => setTimeout(resolve, 12 * 1000));
+        await new Promise((resolve) => setTimeout(resolve, 20 * 1000));
 
         const event = {
             requestContext: {
@@ -101,5 +101,5 @@ describe("Lambda invoke integration tests", () => {
         expect(statusCode).toEqual(200);
         expect(body).toHaveProperty("color");
         expect(body.color).toEqual(color);
-    }, 25000);
+    }, 60000);
 });

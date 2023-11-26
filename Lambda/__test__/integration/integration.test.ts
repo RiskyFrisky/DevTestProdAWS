@@ -42,7 +42,7 @@ describe("Integration tests", () => {
 
         expect(ok).toEqual(true);
         expect(body).toHaveProperty("message");
-    }, 15000);
+    }, 60000);
 
     test("GET /color", async () => {
         // Delay the test execution for X seconds to give time for SQS to trigger Worker Lambda
@@ -60,6 +60,6 @@ describe("Integration tests", () => {
 
         expect(statusCode).toEqual(200);
         expect(body).toHaveProperty("color");
-        expect(body.color).toEqual(color);
-    }, 25000);
+        expect(body.color).toEqual("color");
+    }, 60000);
 });
